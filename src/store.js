@@ -1,0 +1,98 @@
+// Here, i'm creating redux, which is almost same as useReducer.
+// Here, i'm importing createStore from redux, it's only for learning purpose cuz its depricated.
+import { createStore } from "redux";
+const initialState = {
+  balance: 0,
+  loan: 0,
+  loanPurpose: "",
+};
+
+function reducer(state = initialState, action) {
+  switch (action.type) {
+    case "account/deposit":
+      return {
+        ...state,
+        balance: state.balance + action.payload,
+      };
+    case "account/withdraw":
+      return {
+        ...state,
+        balance: state.balance - action.payload,
+      };
+    case "account/requestLoan":
+      if (state.loan > 0) return state;
+      return {
+        ...state,
+        loan: action.payload.amount,
+        loanPurpose: action.payload.purpose,
+        balance: state.balance + action.payload.amount,
+      };
+    case "account/payLoan":
+      return {
+        ...state,
+        loan: 0,
+        balance: state.balance - state.loan,
+        loanPurpose: "",
+      };
+    default:
+      return state;
+  }
+}
+
+// //Here, i'm using redux's createStore and passing reducer function to createStore
+const store = createStore(reducer);
+// // dispatching the action
+// store.dispatch({ type: "account/deposit", payload: 500 });
+// console.log(store.getState());
+
+// store.dispatch({ type: "account/withdraw", payload: 200 });
+// console.log(store.getState());
+// // here, for payload i'm using object.
+// store.dispatch({
+//   type: "account/requestLoan",
+//   payload: {
+//     amount: 500,
+//     purpose: "To buy a mobile",
+//   },
+// });
+
+// store.dispatch({ type: "account/payLoan" });
+// console.log(store.getState());
+
+// console.log(store.getState());
+///////////////////////////////////////////////
+// Here, i'm creating a common convention (Action creator function)
+// Deposit
+function deposit(amount) {
+  return { type: "account/deposit", payload: amount };
+}
+// withdraw
+
+function withdraw(amount) {
+  return { type: "account/withdraw", payload: amount };
+}
+// requestLoan
+function requestLoan(amount, purpose) {
+  return {
+    type: "account/requestLoan",
+    payload: { amount, purpose },
+  };
+}
+
+// payloan
+function payLoan() {
+  return { type: "account/payLoan" };
+}
+
+///////////////////////////////////////////
+store.dispatch(deposit(500));
+console.log(store.getState());
+
+store.dispatch(withdraw(200));
+console.log(store.getState());
+
+store.dispatch(requestLoan(500, "to buy a car"));
+console.log(store.getState());
+
+store.dispatch(payLoan());
+console.log(store.getState());
