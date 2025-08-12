@@ -1,13 +1,20 @@
 // Here, i'm creating redux, which is almost same as useReducer.
 // Here, i'm importing createStore from redux, it's only for learning purpose cuz its depricated.
-import { createStore } from "redux";
-const initialState = {
+import { combineReducers, createStore } from "redux";
+const initialStateAccount = {
   balance: 0,
   loan: 0,
   loanPurpose: "",
 };
 
-function reducer(state = initialState, action) {
+// initial state for customer
+const initialStateCustomer = {
+  fullName: "",
+  nationalId: "",
+  createdAt: "",
+};
+// reducer function for account
+function accountReducer(state = initialStateAccount, action) {
   switch (action.type) {
     case "account/deposit":
       return {
@@ -39,8 +46,35 @@ function reducer(state = initialState, action) {
   }
 }
 
-// //Here, i'm using redux's createStore and passing reducer function to createStore
-const store = createStore(reducer);
+// reducer  for customer
+function customerReducer(state = initialStateCustomer, action) {
+  switch (action.type) {
+    case "customer/customerAccount":
+      return {
+        ...state,
+        fullName: action.payload.fullName,
+        nationalId: action.payload.nationalId,
+        createdAt: action.payload.createdAt,
+      };
+
+    case "customer/customerUpdate":
+      return {
+        ...state,
+        fullName: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+// creating rootReducer for multiple reducer with combineReducers
+const rootReducer = combineReducers({
+  account: accountReducer,
+  customer: customerReducer,
+});
+
+// //Here, i'm using redux's createStore and passing rootReducer function to createStore
+const store = createStore(rootReducer);
 // // dispatching the action
 // store.dispatch({ type: "account/deposit", payload: 500 });
 // console.log(store.getState());
@@ -95,4 +129,28 @@ store.dispatch(requestLoan(500, "to buy a car"));
 console.log(store.getState());
 
 store.dispatch(payLoan());
+console.log(store.getState());
+//////////////////////////////////////
+//action for customer
+function customerAccount(fullName, nationalId) {
+  return {
+    type: "customer/customerAccount",
+    payload: {
+      fullName,
+      nationalId,
+      createdAt: new Date().toISOString(),
+    },
+  };
+}
+// customer update
+function customerUpdate(fullName) {
+  return {
+    type: "customer/customerUpdate",
+    payload: fullName,
+  };
+}
+//  dispatching action for customer
+store.dispatch(customerAccount("chhiring sherpa", "1234567"));
+console.log(store.getState());
+store.dispatch(customerAccount("pasang sherpa", "7654321"));
 console.log(store.getState());
