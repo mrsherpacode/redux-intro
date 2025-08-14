@@ -54,3 +54,10 @@ export function requestLoan(amount, purpose) {
     payload: { amount, purpose },
   };
 }
+
+// payloan
+export function payLoan() {
+  return {
+    type: "account/payLoan",
+  };
+}
