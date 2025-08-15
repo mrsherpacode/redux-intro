@@ -18,8 +18,9 @@ function AccountOperations() {
   function handleDeposit() {
     // dispatch action to deposit action creator function that gets value from depositAmount.
     if (!depositAmount) return;
-    dispatch(deposit(depositAmount));
+    dispatch(deposit(depositAmount, currency));
     setDepositAmount("");
+    setCurrency("USD");
   }
 
   function handleWithdrawal() {

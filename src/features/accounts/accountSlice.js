@@ -39,8 +39,23 @@ export default function accountReducer(state = initialStateAccount, action) {
 ///////////////////////////////////////////////
 // Here, i'm creating a common convention (Action creator function)
 // Deposit
-export function deposit(amount) {
-  return { type: "account/deposit", payload: amount };
+export function deposit(amount, currency) {
+  if (currency === "USD") return { type: "account/deposit", payload: amount };
+  // This a middleware function
+  return async function (dispatch, getState) {
+    try {
+      const res = await fetch(
+        `https://api.frankfurter.app/latest?amount=${amount}&from=${currency}&to=USD`
+      );
+      const data = await res.json();
+      const converted = data.rates ? data.rates.USD : data.amount;
+      dispatch({ type: "account/deposit", payload: converted });
+    } catch (error) {
+      console.error("Currency conversion failed:", error);
+      // Fallback to original amount if conversion fails
+      dispatch({ type: "account/deposit", payload: amount });
+    }
+  };
 }
 // withdraw
 
