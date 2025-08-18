@@ -1,17 +1,15 @@
-// Here, i'm creating redux, which is almost same as useReducer.
-// Here, i'm importing createStore from redux, it's only for learning purpose cuz its depricated.
-import { applyMiddleware, combineReducers, createStore } from "redux";
+// configureStore is a function from modern reduxtoolkit.
+import { configureStore } from "@reduxjs/toolkit";
 import accountReducer from "./features/accounts/accountSlice";
 import customerReducer from "./features/customers/customerSlice";
-// This is redux's middleware
-import { thunk } from "redux-thunk";
 
-// creating rootReducer for multiple reducer with combineReducers
-const rootReducer = combineReducers({
-  account: accountReducer,
-  customer: customerReducer,
+// creating rootReducer for multiple reducer with configureStore
+const store = configureStore({
+  reducer: {
+    account: accountReducer,
+    customer: customerReducer,
+  },
+  // Redux DevTools are automatically enabled in development
 });
 
-// //Here, i'm using redux's createStore and passing rootReducer function to createStore and also applying redux middleware(thunk)
-const store = createStore(rootReducer, applyMiddleware(thunk));
 export default store;
