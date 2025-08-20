@@ -1,6 +1,6 @@
 // configureStore is a function from modern reduxtoolkit.
 import { configureStore } from "@reduxjs/toolkit";
-import accountReducer from "./features/accounts/accountSlice-v2";
+import accountReducer from "./features/accounts/accountSlice";
 import customerReducer from "./features/customers/customerSlice";
 
 // creating rootReducer for multiple reducer with configureStore
