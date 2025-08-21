@@ -1,46 +1,37 @@
+// Modern way of using redux toolkit //
+import { createSlice } from "@reduxjs/toolkit";
+
 // initial state for customer
-const initialStateCustomer = {
+const initialState = {
   fullName: "",
   nationalId: "",
   createdAt: "",
 };
-// reducer  for customer
-export default function customerReducer(state = initialStateCustomer, action) {
-  switch (action.type) {
-    case "customer/customerAccount":
-      return {
-        ...state,
-        fullName: action.payload.fullName,
-        nationalId: action.payload.nationalId,
-        createdAt: action.payload.createdAt,
-      };
-
-    case "customer/customerUpdate":
-      return {
-        ...state,
-        fullName: action.payload,
-      };
-    default:
-      return state;
-  }
-}
-
-//////////////////////////////////////
-//action creator function for customer
-export function customerAccount(fullName, nationalId) {
-  return {
-    type: "customer/customerAccount",
-    payload: {
-      fullName,
-      nationalId,
-      createdAt: new Date().toISOString(),
+const customerSlice = createSlice({
+  name: " customer",
+  initialState,
+  reducers: {
+    customerAccount: {
+      prepare(fullName, nationalId) {
+        return {
+          payload: {
+            fullName,
+            nationalId,
+            createdAt: new Date().toISOString(),
+          },
+        };
+      },
+      reducer(state, action) {
+        state.fullName = action.payload.fullName;
+        state.nationalId = action.payload.nationalId;
+        state.createdAt = action.payload.createdAt;
+      },
     },
-  };
-}
-// customer update
-export function customerUpdate(fullName) {
-  return {
-    type: "customer/customerUpdate",
-    payload: fullName,
-  };
-}
+    customerUpdate(state, action) {
+      state.fullName = action.payload;
+    },
+  },
+});
+
+export const { customerAccount, customerUpdate } = customerSlice.actions;
+export default customerSlice.reducer;
